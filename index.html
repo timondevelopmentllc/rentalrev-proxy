@@ -90,7 +90,7 @@ tr:hover td{background:var(--surf2)}
 </style>
 </head>
 <body>
-<div id="connect-screen">
+<div id="connect-screen" style="display:none">
   <div class="connect-wrap">
     <div class="connect-card">
       <div style="font-size:44px;text-align:center;margin-bottom:14px">&#127968;</div>
@@ -102,7 +102,7 @@ tr:hover td{background:var(--surf2)}
     </div>
   </div>
 </div>
-<div id="app" style="display:none" class="shell">
+<div id="app" class="shell">
   <div class="sidebar">
     <div class="logo"><div class="logo-name">RentalRev</div><div class="logo-sub">Hospitable Live</div></div>
     <button class="nav-item active" onclick="showTab('overview',this)">Overview</button>
@@ -212,7 +212,7 @@ function renderCalendar(){
   var cells=DS.map(function(d){return'<div class="cal-hdr">'+d+'</div>';}).join("");
   for(var i=0;i<fd;i++)cells+='<div></div>';
   for(var d=1;d<=dim;d++){var ds=yr+"-"+String(mo+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");var ent=calMap[ds];var isT=today.getDate()===d&&today.getMonth()===mo&&today.getFullYear()===yr;var cls=ent&&ent.status==="booked"?"c-bk":ent&&ent.status==="blocked"?"c-bl":"c-av";var price=ent&&ent.price?'<span style="position:absolute;bottom:1px;left:0;right:0;text-align:center;font-size:7px;color:var(--gld);font-weight:700">$'+ent.price+'</span>':"";cells+='<div class="cal-cell '+cls+(isT?" c-td":"")+'" title="'+ds+'">'+d+price+'</div>';}
-  var priceInputs="";var upcomingDays=[];for(var i=0;i<6;i++){var dt=new Date(yr,mo,today.getDate()+i+1);if(dt.getMonth()===mo){var ds2=dt.toISOString().split("T")[0];var ex=calMap[ds2]&&calMap[ds2].price;priceInputs+='<div style="background:var(--surf2);border-radius:8px;padding:12px;border:1px solid var(--bdr)"><div style="font-size:11px;color:var(--mut);margin-bottom:6px">'+fdate(ds2)+'</div><div style="display:flex;gap:6px"><input class="inp inp-sm" id="price-'+ds2+'" placeholder="'+(ex?"$"+ex:"Rate")+'"/><button class="btn btn-grn btn-sm" onclick="savePrice(''+ds2+'')">Save</button></div></div>';}}
+  var priceInputs="";var upcomingDays=[];for(var i=0;i<6;i++){var dt=new Date(yr,mo,today.getDate()+i+1);if(dt.getMonth()===mo){var ds2=dt.toISOString().split("T")[0];var ex=calMap[ds2]&&calMap[ds2].price;priceInputs+='<div style="background:var(--surf2);border-radius:8px;padding:12px;border:1px solid var(--bdr)"><div style="font-size:11px;color:var(--mut);margin-bottom:6px">'+fdate(ds2)+'</div><div style="display:flex;gap:6px"><input class="inp inp-sm" id="price-'+ds2+'" placeholder="'+(ex?"$"+ex:"Rate")+'"/><button class="btn btn-grn btn-sm" onclick="savePrice(&quot;'+ds2+'&quot;)">Save</button></div></div>';}}
   var html='<div id="cal-save-msg"></div><div class="card"><div class="card-head"><div class="card-title">'+(sel&&sel.name||"Calendar")+'</div><div style="display:flex;align-items:center;gap:10px"><button class="btn btn-ghost btn-sm" onclick="calNav(-1)">prev</button><span style="font-size:14px;font-weight:600;min-width:120px;text-align:center">'+MF[mo]+" "+yr+'</span><button class="btn btn-ghost btn-sm" onclick="calNav(1)">next</button></div></div><div class="card-body"><div class="cal-grid">'+cells+'</div></div></div>';
   html+='<div class="card"><div class="card-head"><div class="card-title">Update Pricing</div></div><div class="card-body"><div class="g3">'+priceInputs+'</div></div></div>';
   g("tab-calendar").innerHTML=html;if(sel)loadCalendar();
@@ -245,7 +245,7 @@ function renderDirect(t){
   if(t)dbTab=t;
   if(!dbS.propName&&STATE.properties.length)dbS.propName=STATE.properties[0]&&STATE.properties[0].name||"My Rental";
   var sv=dbS.airbnbRate-dbS.directRate,sp=Math.round(sv/dbS.airbnbRate*100);
-  var tabs='<div style="display:flex;gap:8px;margin-bottom:18px">'+[["settings","Settings"],["preview","Preview"],["embed","Embed Code"]].map(function(x){return'<button class="btn btn-sm '+(dbTab===x[0]?"btn-acc":"btn-ghost")+'" onclick="renderDirect(''+x[0]+'')">'+x[1]+'</button>';}).join("")+'</div>';
+  var tabs='<div style="display:flex;gap:8px;margin-bottom:18px">'+[["settings","Settings"],["preview","Preview"],["embed","Embed Code"]].map(function(x){return'<button class="btn btn-sm '+(dbTab===x[0]?"btn-acc":"btn-ghost")+'" onclick="renderDirect(&quot;'+x[0]+'&quot;)">'+x[1]+'</button>';}).join("")+'</div>';
   var body="";
   if(dbTab==="settings"){body='<div class="g2"><div class="card"><div class="card-head"><div class="card-title">Page Content</div></div><div class="card-body">'+[["propName","Property Name"],["headline","Headline"],["subline","Sub-headline"],["email","Contact Email"],["phone","Phone"]].map(function(x){return'<div style="margin-bottom:12px"><label class="lbl">'+x[1]+'</label><input class="inp" value="'+dbS[x[0]]+'" onchange="dbU(''+x[0]+'',this.value)" style="margin-bottom:0"/></div>';}).join("")+'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><label class="lbl">Direct Rate</label><input class="inp" type="number" value="'+dbS.directRate+'" onchange="dbU('directRate',+this.value)" style="margin-bottom:0"/></div><div><label class="lbl">Airbnb Rate</label><input class="inp" type="number" value="'+dbS.airbnbRate+'" onchange="dbU('airbnbRate',+this.value)" style="margin-bottom:0"/></div></div></div></div><div class="card"><div class="card-head"><div class="card-title">Features</div></div><div class="card-body"><div class="tgl-wrap"><div><div style="font-size:13px;font-weight:500">Show Savings Banner</div></div><button class="tgl '+(dbS.showSavings?"on":"")+'" onclick="dbT('showSavings')"></button></div><div class="tgl-wrap"><div><div style="font-size:13px;font-weight:500">Contact Form</div></div><button class="tgl '+(dbS.contactEnabled?"on":"")+'" onclick="dbT('contactEnabled')"></button></div><div class="alert a-grn" style="margin-top:14px"><span>&#128176;</span><div>Guests save <strong>$'+sv+'/night ('+sp+'%)</strong> vs Airbnb.</div></div></div></div></div>';}
   else if(dbTab==="preview"){body='<div style="max-width:440px;margin:0 auto"><div class="bp"><div class="bp-hero"><div style="font-size:11px;opacity:.6;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">'+dbS.propName+'</div><div class="bp-title">'+dbS.headline+'</div><div style="font-size:13px;opacity:.7">'+dbS.subline+'</div></div><div class="bp-body">'+(dbS.showSavings?'<div class="bp-save">Save $'+sv+'/night vs Airbnb!</div>':'')+'<div class="bp-lbl">Check-in</div><input class="bp-inp" type="date"/><div class="bp-lbl">Check-out</div><input class="bp-inp" type="date"/>'+(dbS.contactEnabled?'<div class="bp-lbl">Name</div><input class="bp-inp" placeholder="Full name"/><div class="bp-lbl">Email</div><input class="bp-inp" type="email" placeholder="your@email.com"/>':'')+'<div style="margin-bottom:14px"><div style="font-size:11px;color:#999;text-decoration:line-through">$'+dbS.airbnbRate+'/night on Airbnb</div><div style="font-size:26px;font-weight:700;color:#1A1410">$'+dbS.directRate+'<span style="font-size:13px;font-weight:400">/night</span></div></div><button class="bp-btn">Request to Book Direct</button></div></div></div>';}
@@ -255,6 +255,7 @@ function renderDirect(t){
 function dbU(k,v){dbS[k]=v;}
 function dbT(k){dbS[k]=!dbS[k];renderDirect();}
 function copyEmbed(){var sv=dbS.airbnbRate-dbS.directRate;var c='<form action="mailto:'+dbS.email+'" method="post"><input type="date" name="checkin" required/><input type="date" name="checkout" required/><input type="text" name="name" placeholder="Name" required/><input type="email" name="email" placeholder="Email" required/><button type="submit">Book Direct at $'+dbS.directRate+'/night</button></form>';navigator.clipboard&&navigator.clipboard.writeText(c).then(function(){alert("Copied!");}).catch(function(){alert("Could not copy");});}
+loadData();
 </script>
 </body>
 </html>
