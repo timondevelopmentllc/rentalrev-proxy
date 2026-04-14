@@ -201,7 +201,7 @@ function loadData(){
     fetch("/api/ical").then(function(r){return r.text();})
   ]).then(function(results){
     STATE.properties=results[0].data||[];
-    STATE.reservations=parseIcal(results[1]);
+    STATE.reservations=parseIcal(results[1]).sort(function(a,b){return a.arrival_date>b.arrival_date?1:-1;});
     var results=[{data:STATE.properties},{data:STATE.reservations}];
     if(STATE.properties.length&&!STATE.selProp)STATE.selProp=STATE.properties[0];
     g("prop-count").textContent=STATE.properties.length+" propert"+(STATE.properties.length===1?"y":"ies");
