@@ -1,0 +1,12 @@
+{
+  "name": "rentalrev-proxy",
+  "version": "1.0.0",
+  "description": "Vercel proxy for Hospitable API — solves CORS for RentalRev dashboard",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

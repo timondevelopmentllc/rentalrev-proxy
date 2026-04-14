@@ -158,16 +158,50 @@ function doConnect(){
   loadData().then(function(){g("connect-screen").style.display="none";g("app").style.display="flex";}).catch(function(e){g("connect-err-msg").textContent="Could not connect: "+e.message;g("connect-err").style.display="flex";btn.disabled=false;btn.textContent="Load My Hospitable Data";});
 }
 function disconnect(){STATE={properties:[],reservations:[],calData:[],selProp:null,calMonth:new Date().getMonth(),calYear:new Date().getFullYear()};g("app").style.display="none";g("connect-screen").style.display="block";}
+
+function parseIcal(text) {
+  var events = [];
+  var blocks = text.split("BEGIN:VEVENT");
+  blocks.shift();
+  blocks.forEach(function(block) {
+    var get = function(key) {
+      var m = block.match(new RegExp(key + "[^:]*:([^\r\n]+)"));
+      return m ? m[1].trim() : "";
+    };
+    var summary = get("SUMMARY");
+    var desc = get("DESCRIPTION").replace(/\\n/g, "\n");
+    var dtstart = get("DTSTART");
+    var dtend = get("DTEND");
+    var nameMatch = summary.match(/^(.+?)\s*\(/);
+    var codeMatch = summary.match(/\(([^)]+)\)/);
+    var emailMatch = desc.match(/Email:\s*([^\\n]+)/);
+    var toDate = function(dt) {
+      if (!dt) return "";
+      var m = dt.match(/(\d{4})(\d{2})(\d{2})/);
+      return m ? m[1]+"-"+m[2]+"-"+m[3] : "";
+    };
+    if (nameMatch) {
+      events.push({
+        id: codeMatch ? codeMatch[1] : Math.random().toString(36),
+        status: "accepted",
+        platform: desc.includes("airbnb") ? "airbnb" : desc.includes("vrbo") ? "vrbo" : "direct",
+        arrival_date: toDate(dtstart),
+        departure_date: toDate(dtend),
+        guest: { name: nameMatch[1].trim(), email: emailMatch ? emailMatch[1].trim() : "" },
+        code: codeMatch ? codeMatch[1] : ""
+      });
+    }
+  });
+  return events;
+}
 function loadData(){
   setStatus("loading");
-  return api("/v2/properties?per_page=50")
-  .then(function(pr){
-    STATE.properties=pr.data||[];
-    var propId=STATE.properties[0]&&STATE.properties[0].id||"";
-    return api("/v2/reservations?per_page=100&properties[]="+propId+"&include=guest,financials,properties");
-  })
-  .then(function(rr){
-    STATE.reservations=rr.data||[];
+  return Promise.all([
+    api("/v2/properties?per_page=50"),
+    fetch("/api/ical").then(function(r){return r.text();})
+  ]).then(function(results){
+    STATE.properties=results[0].data||[];
+    STATE.reservations=parseIcal(results[1]);
     var results=[{data:STATE.properties},{data:STATE.reservations}];
     if(STATE.properties.length&&!STATE.selProp)STATE.selProp=STATE.properties[0];
     g("prop-count").textContent=STATE.properties.length+" propert"+(STATE.properties.length===1?"y":"ies");
