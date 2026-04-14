@@ -160,9 +160,15 @@ function doConnect(){
 function disconnect(){STATE={properties:[],reservations:[],calData:[],selProp:null,calMonth:new Date().getMonth(),calYear:new Date().getFullYear()};g("app").style.display="none";g("connect-screen").style.display="block";}
 function loadData(){
   setStatus("loading");
-  return Promise.all([api("/v2/properties?per_page=50"),api("/v2/reservations?per_page=100&include=guest,financials,properties&properties[]=" + (STATE.properties[0]?.id || ""))])
-  .then(function(results){
-    STATE.properties=results[0].data||[];STATE.reservations=results[1].data||[];
+  return api("/v2/properties?per_page=50")
+  .then(function(pr){
+    STATE.properties=pr.data||[];
+    var propId=STATE.properties[0]&&STATE.properties[0].id||"";
+    return api("/v2/reservations?per_page=100&properties[]="+propId+"&include=guest,financials,properties");
+  })
+  .then(function(rr){
+    STATE.reservations=rr.data||[];
+    var results=[{data:STATE.properties},{data:STATE.reservations}];
     if(STATE.properties.length&&!STATE.selProp)STATE.selProp=STATE.properties[0];
     g("prop-count").textContent=STATE.properties.length+" propert"+(STATE.properties.length===1?"y":"ies");
     g("res-count").textContent=STATE.reservations.length+" reservations";
