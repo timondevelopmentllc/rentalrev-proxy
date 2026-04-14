@@ -280,7 +280,7 @@ function renderReservations(f){
   var html='<div style="display:flex;gap:8px;margin-bottom:18px">';
   [{k:"upcoming",l:"Upcoming"},{k:"past",l:"Past"},{k:"all",l:"All"}].forEach(function(x){
     var cnt=sets[x.k].length;
-    html+='<button class="btn '+(resFilter===x.k?"btn-acc":"btn-ghost")+' btn-sm" onclick="renderReservations(''+x.k+'')">'+x.l+' ('+cnt+')</button>';
+    html+='<button class="btn '+(resFilter===x.k?"btn-acc":"btn-ghost")+' btn-sm" onclick="renderReservations(&quot;'+x.k+'&quot;)">'+x.l+' ('+cnt+')</button>';
   });
   html+='</div><div class="card"><table><thead><tr><th>Guest</th><th>Check-in</th><th>Check-out</th><th>Nights</th><th>Channel</th><th>Revenue</th><th>ADR</th></tr></thead><tbody>';
   var list=resFilter==="past"?filtered.slice().reverse():filtered;
