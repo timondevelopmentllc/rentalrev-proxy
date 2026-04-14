@@ -410,7 +410,7 @@ function renderDirect(t){
   if(!dbS.name&&DATA.props.length)dbS.name=DATA.props[0].name||"My Rental";
   var est=Math.round(dbS.rate*1.15),sv=est-dbS.rate,sp=Math.round(sv/est*100);
   var html='<div style="display:flex;gap:8px;margin-bottom:20px">';
-  [["settings","Settings"],["preview","Preview"],["embed","Embed"]].forEach(function(x){html+='<button class="btn '+(dbTab===x[0]?"btn-acc":"btn-ghost")+' btn-sm" onclick="renderDirect(''+x[0]+'')">'+x[1]+'</button>';});
+  [["settings","Settings"],["preview","Preview"],["embed","Embed"]].forEach(function(x){html+='<button class="btn '+(dbTab===x[0]?"btn-acc":"btn-ghost")+' btn-sm" onclick="renderDirect(&quot;'+x[0]+'&quot;)">'+x[1]+'</button>';});
   html+='</div>';
   if(dbTab==="settings"){
     html+='<div class="g2"><div class="card"><div class="card-head"><div class="card-title">Page Settings</div></div><div class="card-body">';
