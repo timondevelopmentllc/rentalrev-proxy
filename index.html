@@ -153,8 +153,8 @@ function parseIcal(text){
     var emailM=desc.match(/Email:\s*([^\\n]+)/);
     var adultsM=desc.match(/Adults:\s*(\d+)/);
     var platform="direct";
-    if(desc.toLowerCase().indexOf("airbnb")>=0)platform="airbnb";
-    else if(desc.toLowerCase().indexOf("vrbo")>=0||desc.toLowerCase().indexOf("homeaway")>=0)platform="vrbo";
+    if(desc.toLowerCase().indexOf("airbnb")>=0||b.toLowerCase().indexOf("airbnb")>=0)platform="airbnb";
+    else if(desc.toLowerCase().indexOf("vrbo")>=0||desc.toLowerCase().indexOf("homeaway")>=0||b.toLowerCase().indexOf("vrbo")>=0)platform="vrbo";
     if(nameM&&toDS(dtstart)){
       var n=nights(toDS(dtstart),toDS(dtend));
       events.push({id:codeM?codeM[1]:Math.random().toString(36).slice(2),status:"accepted",platform:platform,arrival_date:toDS(dtstart),departure_date:toDS(dtend),guest:{name:nameM[1].trim(),email:emailM?emailM[1].trim():""},adults:adultsM?parseInt(adultsM[1]):0,code:codeM?codeM[1]:"",nights:n});
@@ -228,7 +228,7 @@ function renderOverview(){
   var yrRes=DATA.res.filter(function(r){return r.arrival_date&&r.arrival_date.startsWith(yr+"");});
   var yrRev=calcRev(yrRes);
   var bookedDays=getOcc(yr);
-  var daysSoFar=Math.floor((now-new Date(yr,0,1))/86400000)+1;
+  var daysSoFar=365;
   var occPct=Math.round(bookedDays/daysSoFar*100);
   var upcoming=DATA.res.filter(function(r){return r.arrival_date>now.toISOString().split("T")[0];});
   var pc={};DATA.res.forEach(function(r){var p=r.platform||"direct";pc[p]=(pc[p]||0)+1;});
@@ -348,7 +348,7 @@ function renderOwner(){
   var yrRes=DATA.res.filter(function(r){return r.arrival_date&&r.arrival_date.startsWith(yr);});
   var yrRev=calcRev(yrRes);
   var bookedDays=getOcc(yr);
-  var daysSoFar=Math.floor((now-new Date(yr,0,1))/86400000)+1;
+  var daysSoFar=365;
   var occPct=Math.round(bookedDays/daysSoFar*100);
   var allRev=calcRev(DATA.res);
   var totalN=DATA.res.reduce(function(s,r){return s+(r.nights||0);},0);
