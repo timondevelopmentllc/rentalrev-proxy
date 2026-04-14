@@ -2,4 +2,449 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<title>RentalRev — STR Revenue Intelligence</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RentalRev - STR Revenue Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080B12;--surf:#0F1420;--surf2:#161C2E;--surf3:#1E2640;--bdr:#252D45;--txt:#EDF0F7;--mut:#6B7A9F;--acc:#4F8EFF;--gold:#F5C842;--grn:#2ECC8F;--red:#F06B6B;--pur:#9B7FE8;--orange:#F5893A}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+.shell{display:flex;min-height:100vh}
+.sidebar{width:230px;min-width:230px;background:var(--surf);border-right:1px solid var(--bdr);display:flex;flex-direction:column}
+.logo-wrap{padding:24px 20px 20px;border-bottom:1px solid var(--bdr)}
+.logo-name{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700}
+.logo-name span{color:var(--acc)}
+.logo-tag{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--mut);margin-top:2px}
+.nav-sec{font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--mut);padding:18px 20px 6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:13px;font-weight:500;color:var(--mut);cursor:pointer;border:none;background:none;width:100%;text-align:left;transition:all .15s;border-left:3px solid transparent}
+.nav-item:hover{color:var(--txt);background:var(--surf2)}
+.nav-item.active{color:var(--acc);border-left-color:var(--acc);background:rgba(79,142,255,.08)}
+.sidebar-footer{margin-top:auto;padding:16px 20px;border-top:1px solid var(--bdr)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--grn);box-shadow:0 0 8px var(--grn);display:inline-block;margin-right:6px}
+.dot.red{background:var(--red);box-shadow:0 0 8px var(--red)}
+.dot.ylw{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+.topbar{background:var(--surf);border-bottom:1px solid var(--bdr);padding:18px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600}
+.page-sub{font-size:12px;color:var(--mut);margin-top:2px}
+.content{padding:28px 32px;flex:1}
+.btn{padding:9px 18px;border-radius:8px;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+.btn-acc{background:var(--acc);color:#020814}.btn-ghost{background:transparent;border:1px solid var(--bdr);color:var(--mut)}.btn-ghost:hover{color:var(--txt);border-color:var(--txt)}
+.btn-sm{padding:5px 12px;font-size:11px}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.b-grn{background:rgba(46,204,143,.12);color:var(--grn)}.b-blu{background:rgba(79,142,255,.12);color:var(--acc)}.b-gld{background:rgba(245,200,66,.12);color:var(--gold)}.b-mut{background:var(--surf2);color:var(--mut)}.b-pur{background:rgba(155,127,232,.12);color:var(--pur)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--surf);border:1px solid var(--bdr);border-radius:14px;padding:20px 22px;position:relative;overflow:hidden}
+.stat-shine{position:absolute;top:0;left:0;right:0;height:2px}
+.stat-lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mut);margin-bottom:10px}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:700;line-height:1;margin-bottom:6px}
+.stat-delta{font-size:11px;color:var(--mut)}
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:14px;overflow:hidden;margin-bottom:20px}
+.card-head{padding:16px 22px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600}
+.card-sub{font-size:11px;color:var(--mut);margin-top:2px}
+.card-body{padding:22px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+table{width:100%;border-collapse:collapse}
+th{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--mut);padding:10px 14px;text-align:left;border-bottom:1px solid var(--bdr)}
+td{padding:12px 14px;font-size:13px;border-bottom:1px solid var(--bdr);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surf2)}
+.plat{display:inline-flex;align-items:center;gap:5px;font-size:12px}
+.pdot{width:8px;height:8px;border-radius:50%}
+.p-airbnb{background:#FF5A5F}.p-vrbo{background:#1DABD4}.p-direct{background:var(--grn)}
+.bar-wrap{margin-bottom:14px}
+.bar-row{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-bottom:5px}
+.bar-track{height:6px;background:var(--bdr);border-radius:3px}
+.bar-fill{height:100%;border-radius:3px;transition:width .8s ease}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:12px}
+.cal-hdr{font-size:10px;font-weight:700;text-align:center;color:var(--mut);padding:4px 0}
+.cal-cell{aspect-ratio:1;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500}
+.c-av{background:var(--surf2);color:var(--mut)}.c-bk{background:rgba(79,142,255,.25);color:var(--acc)}.c-td{box-shadow:0 0 0 2px var(--gold)}
+.alert{padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start;line-height:1.6}
+.a-blu{background:rgba(79,142,255,.08);border:1px solid rgba(79,142,255,.2)}
+.a-grn{background:rgba(46,204,143,.08);border:1px solid rgba(46,204,143,.2)}
+.a-gld{background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.2)}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--bdr);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-overlay{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px;color:var(--mut);gap:16px}
+.loading-overlay .spin{width:32px;height:32px;border-width:3px}
+.inp{width:100%;padding:10px 14px;background:var(--surf2);border:1px solid var(--bdr);border-radius:8px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:13px;outline:none}
+.inp:focus{border-color:var(--acc)}
+.lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--mut);margin-bottom:5px;display:block}
+.insight-card{background:var(--surf2);border:1px solid var(--bdr);border-radius:10px;padding:16px;margin-bottom:12px;border-left:3px solid var(--acc)}
+.insight-title{font-size:13px;font-weight:600;margin-bottom:4px}
+.insight-body{font-size:12px;color:var(--mut);line-height:1.6}
+.insight-impact{font-size:11px;font-weight:600;color:var(--grn);margin-top:6px}
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--bdr)}
+.kpi-item{padding:20px 24px;border-right:1px solid var(--bdr);text-align:center}
+.kpi-item:last-child{border-right:none}
+.kpi-val{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;color:var(--grn)}
+.kpi-lbl{font-size:11px;color:var(--mut);margin-top:4px}
+.month-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--bdr)}
+.month-cell{background:var(--surf);padding:14px 16px}
+.month-name{font-size:11px;font-weight:600;color:var(--mut);margin-bottom:6px;letter-spacing:1px;text-transform:uppercase}
+.month-rev{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700}
+.month-occ{font-size:11px;color:var(--mut);margin-top:3px}
+.month-bar{height:3px;border-radius:2px;margin-top:8px;background:var(--bdr)}
+.month-bar-fill{height:100%;border-radius:2px;background:var(--acc)}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px}
+@media(max-width:900px){.sidebar{display:none}.stat-grid{grid-template-columns:1fr 1fr}.g2,.g3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="shell" id="app">
+  <div class="sidebar">
+    <div class="logo-wrap"><div class="logo-name">Rental<span>Rev</span></div><div class="logo-tag">Revenue Intelligence</div></div>
+    <div class="nav-sec">Analytics</div>
+    <button class="nav-item active" onclick="showTab('overview',this)">&#9670; Overview</button>
+    <button class="nav-item" onclick="showTab('reservations',this)">&#8801; Reservations</button>
+    <button class="nav-item" onclick="showTab('calendar',this)">&#9638; Calendar</button>
+    <button class="nav-item" onclick="showTab('revenue',this)">$ Revenue</button>
+    <div class="nav-sec">Tools</div>
+    <button class="nav-item" onclick="showTab('owner',this)">&#9675; Owner Report</button>
+    <button class="nav-item" onclick="showTab('insights',this)">&#10022; AI Insights</button>
+    <button class="nav-item" onclick="showTab('direct',this)">&#8853; Direct Booking</button>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;margin-bottom:8px"><div class="dot" id="sdot"></div><span style="font-size:11px;color:var(--mut)" id="stxt">Loading</span></div>
+      <div style="font-size:10px;color:var(--mut);margin-bottom:10px" id="sync-time"></div>
+      <button class="btn btn-ghost btn-sm" onclick="loadAll()">Refresh</button>
+    </div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <div><div class="page-title" id="ptitle">Overview</div><div class="page-sub" id="psub">Live data from Hospitable</div></div>
+      <div style="display:flex;gap:8px"><span class="badge b-pur" id="prop-badge">-- properties</span><span class="badge b-blu" id="res-badge">-- bookings</span></div>
+    </div>
+    <div class="content" id="content">
+      <div class="loading-overlay"><div class="spin"></div><div>Loading your data...</div></div>
+    </div>
+  </div>
+</div>
+<script>
+var DATA={props:[],res:[],calMo:new Date().getMonth(),calYr:new Date().getFullYear()};
+var MS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+var MF=["January","February","March","April","May","June","July","August","September","October","November","December"];
+var DAYS=["Su","Mo","Tu","We","Th","Fr","Sa"];
+
+function api(path,opts){
+  opts=opts||{};
+  return fetch("/api/hospitable?url="+encodeURIComponent(path),Object.assign({},opts,{headers:Object.assign({"Accept":"application/json","Content-Type":"application/json"},opts.headers||{})}))
+  .then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d.message||d.error||"HTTP "+r.status);return d;});});
+}
+function money(n){return n==null?"--":"$"+Number(n).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});}
+function fdate(d){if(!d)return"--";var dt=new Date(d+"T12:00:00Z");return MS[dt.getUTCMonth()]+" "+dt.getUTCDate()+", "+dt.getUTCFullYear();}
+function nights(a,b){return Math.round((new Date(b)-new Date(a))/86400000);}
+function pcls(p){return({airbnb:"p-airbnb",vrbo:"p-vrbo",direct:"p-direct"})[(p||"").toLowerCase()]||"p-direct";}
+function toDS(dt){var m=dt.match(/(\d{4})(\d{2})(\d{2})/);return m?m[1]+"-"+m[2]+"-"+m[3]:"";}
+function g(id){return document.getElementById(id);}
+
+function parseIcal(text){
+  var events=[];
+  var blocks=text.split("BEGIN:VEVENT");blocks.shift();
+  blocks.forEach(function(b){
+    function get(key){var m=b.match(new RegExp(key+"[^:]*:([^\r\n]+)"));return m?m[1].trim():"";}
+    var summary=get("SUMMARY");
+    var desc=get("DESCRIPTION").replace(/\n/g,"\n");
+    var dtstart=get("DTSTART");var dtend=get("DTEND");
+    var nameM=summary.match(/^(.+?)\s*\(/);
+    var codeM=summary.match(/\(([^)]+)\)/);
+    var emailM=desc.match(/Email:\s*([^\\n]+)/);
+    var adultsM=desc.match(/Adults:\s*(\d+)/);
+    var platform="direct";
+    if(desc.toLowerCase().indexOf("airbnb")>=0)platform="airbnb";
+    else if(desc.toLowerCase().indexOf("vrbo")>=0||desc.toLowerCase().indexOf("homeaway")>=0)platform="vrbo";
+    if(nameM&&toDS(dtstart)){
+      var n=nights(toDS(dtstart),toDS(dtend));
+      events.push({id:codeM?codeM[1]:Math.random().toString(36).slice(2),status:"accepted",platform:platform,arrival_date:toDS(dtstart),departure_date:toDS(dtend),guest:{name:nameM[1].trim(),email:emailM?emailM[1].trim():""},adults:adultsM?parseInt(adultsM[1]):0,code:codeM?codeM[1]:"",nights:n});
+    }
+  });
+  events.sort(function(a,b){return a.arrival_date<b.arrival_date?-1:1;});
+  return events;
+}
+
+function setStatus(s){var d=g("sdot"),t=g("stxt");if(!d)return;d.className="dot"+(s==="error"?" red":s==="loading"?" ylw":"");t.textContent=s==="error"?"Error":s==="loading"?"Syncing":"Connected";}
+
+function loadAll(){
+  setStatus("loading");
+  Promise.all([
+    api("/v2/properties?per_page=50"),
+    fetch("/api/ical").then(function(r){return r.text();}),
+    api("/v2/reservations?properties[]=de730c91-ddca-4902-bfd6-8d899e5c86a8&per_page=100&include=financials")
+  ]).then(function(results){
+    DATA.props=results[0].data||[];
+    DATA.res=parseIcal(results[1]);
+    var finMap={};
+    (results[2].data||[]).forEach(function(r){if(r.code)finMap[r.code]=r.financials;if(r.id)finMap[r.id]=r.financials;});
+    DATA.res.forEach(function(r){r.financials=finMap[r.code]||finMap[r.id]||null;});
+    if(DATA.props.length)DATA.selProp=DATA.props[0];
+    g("prop-badge").textContent=DATA.props.length+" propert"+(DATA.props.length===1?"y":"ies");
+    g("res-badge").textContent=DATA.res.length+" bookings";
+    g("sync-time").textContent="Synced "+new Date().toLocaleTimeString();
+    setStatus("ok");renderTab();
+  }).catch(function(e){setStatus("error");g("content").innerHTML='<div class="alert a-red" style="background:rgba(240,107,107,.08);border:1px solid rgba(240,107,107,.2)"><span>!</span><div>Failed: '+e.message+'<br><button class="btn btn-ghost btn-sm" onclick="loadAll()" style="margin-top:8px">Retry</button></div></div>';});
+}
+
+function calcRev(res){var t=0;res.forEach(function(r){if(r.financials&&r.financials.host&&r.financials.host.revenue)t+=r.financials.host.revenue.amount/100;});return t;}
+
+function getMonthly(){
+  var m={};
+  DATA.res.forEach(function(r){
+    if(!r.arrival_date)return;
+    var k=r.arrival_date.slice(0,7);
+    if(!m[k])m[k]={rev:0,nights:0,bookings:0,month:k};
+    m[k].bookings++;m[k].nights+=r.nights||0;
+    if(r.financials&&r.financials.host&&r.financials.host.revenue)m[k].rev+=r.financials.host.revenue.amount/100;
+  });
+  return Object.values(m).sort(function(a,b){return a.month<b.month?-1:1;});
+}
+
+function getOcc(year){
+  var booked=new Set();
+  DATA.res.forEach(function(r){
+    if(!r.arrival_date)return;
+    var d=new Date(r.arrival_date+"T12:00:00Z");
+    var end=new Date(r.departure_date+"T12:00:00Z");
+    while(d<end){if(d.getUTCFullYear()===year)booked.add(d.toISOString().split("T")[0]);d.setUTCDate(d.getUTCDate()+1);}
+  });
+  return booked.size;
+}
+
+var curTab="overview";
+var TAB_META={overview:["Overview","Revenue performance at a glance"],reservations:["Reservations","All bookings from every channel"],calendar:["Calendar","Availability and booking density"],revenue:["Revenue Analytics","Deep dive into earnings"],owner:["Owner Report","Shareable performance summary"],insights:["AI Insights","Automated revenue optimization"],direct:["Direct Booking","Capture fee-free bookings"]};
+
+function showTab(name,el){
+  document.querySelectorAll(".nav-item").forEach(function(b){b.classList.remove("active");});
+  el.classList.add("active");curTab=name;
+  g("ptitle").textContent=TAB_META[name][0];g("psub").textContent=TAB_META[name][1];
+  renderTab();
+}
+function renderTab(){var fns={overview:renderOverview,reservations:renderReservations,calendar:renderCalendar,revenue:renderRevenue,owner:renderOwner,insights:renderInsights,direct:renderDirect};if(fns[curTab])fns[curTab]();}
+
+function renderOverview(){
+  var now=new Date();var yr=now.getFullYear();
+  var allRev=calcRev(DATA.res);
+  var yrRes=DATA.res.filter(function(r){return r.arrival_date&&r.arrival_date.startsWith(yr+"");});
+  var yrRev=calcRev(yrRes);
+  var bookedDays=getOcc(yr);
+  var daysSoFar=Math.floor((now-new Date(yr,0,1))/86400000)+1;
+  var occPct=Math.round(bookedDays/daysSoFar*100);
+  var upcoming=DATA.res.filter(function(r){return r.arrival_date>now.toISOString().split("T")[0];});
+  var pc={};DATA.res.forEach(function(r){var p=r.platform||"direct";pc[p]=(pc[p]||0)+1;});
+  var monthly=getMonthly();var maxRev=Math.max.apply(null,monthly.map(function(m){return m.rev;})||[0]);
+
+  var html='<div class="stat-grid">';
+  var stats=[[money(allRev),"All-time earnings","Total Revenue","var(--grn)"],[money(yrRev),yr+" so far","This Year","var(--acc)"],[occPct+"%","Booked in "+yr,"Occupancy","var(--gold)"],[upcoming.length,"Future confirmed","Upcoming","var(--pur)"]];
+  stats.forEach(function(s){html+='<div class="stat-card"><div class="stat-shine" style="background:'+s[3]+'"></div><div class="stat-lbl">'+s[2]+'</div><div class="stat-val" style="color:'+s[3]+'">'+s[0]+'</div><div class="stat-delta">'+s[1]+'</div></div>';});
+  html+='</div><div class="g2">';
+
+  html+='<div class="card"><div class="card-head"><div><div class="card-title">Upcoming Stays</div></div></div>';
+  if(!upcoming.length){html+='<div style="text-align:center;padding:40px;color:var(--mut)">No upcoming stays</div>';}
+  else{html+='<table><thead><tr><th>Guest</th><th>Check-in</th><th>Nights</th><th>Channel</th></tr></thead><tbody>';
+    upcoming.slice(0,8).forEach(function(r){html+='<tr><td style="font-weight:500">'+r.guest.name+'</td><td style="font-size:12px">'+fdate(r.arrival_date)+'</td><td><span class="badge b-mut">'+r.nights+'n</span></td><td><span class="plat"><span class="pdot '+pcls(r.platform)+'"></span>'+r.platform+'</span></td></tr>';});
+    html+='</tbody></table>';}
+  html+='</div>';
+
+  html+='<div class="card"><div class="card-head"><div class="card-title">Booking Channels</div></div><div class="card-body">';
+  var total=DATA.res.length;
+  Object.entries(pc).sort(function(a,b){return b[1]-a[1];}).forEach(function(e){
+    var pct=Math.round(e[1]/total*100);
+    var col=e[0]==="airbnb"?"#FF5A5F":e[0]==="vrbo"?"#1DABD4":"var(--grn)";
+    html+='<div class="bar-wrap"><div class="bar-row"><span class="plat"><span class="pdot '+pcls(e[0])+'"></span>'+e[0]+'</span><span>'+e[1]+' ('+pct+'%)</span></div><div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+col+'"></div></div></div>';
+  });
+  html+='<div class="alert a-gld" style="margin-top:8px"><span>!</span><div>Enable Direct Booking to keep an extra 3-15% per stay.</div></div></div></div></div>';
+
+  if(monthly.length){
+    html+='<div class="card"><div class="card-head"><div class="card-title">Monthly Revenue</div></div><div class="card-body">';
+    html+='<div style="display:flex;gap:3px;align-items:flex-end;height:100px;margin-bottom:8px">';
+    monthly.forEach(function(m){
+      var h=maxRev>0?Math.max(3,Math.round(m.rev/maxRev*100)):3;
+      var isNow=m.month===now.toISOString().slice(0,7);
+      html+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">';
+      html+='<div style="font-size:8px;color:var(--mut)">'+(m.rev>0?money(m.rev):"")+'</div>';
+      html+='<div style="width:100%;height:'+h+'%;min-height:3px;background:'+(isNow?"var(--acc)":"var(--surf3)")+';border-radius:3px 3px 0 0"></div>';
+      html+='<div style="font-size:8px;color:var(--mut)">'+m.month.slice(5,7)+'</div></div>';
+    });
+    html+='</div></div></div>';
+  }
+  g("content").innerHTML=html;
+}
+
+var resFilter="upcoming";
+function renderReservations(f){
+  if(f)resFilter=f;
+  var now=new Date().toISOString().split("T")[0];
+  var sets={upcoming:DATA.res.filter(function(r){return r.arrival_date>=now;}),past:DATA.res.filter(function(r){return r.arrival_date<now;}),all:DATA.res};
+  var filtered=sets[resFilter]||DATA.res;
+  var html='<div style="display:flex;gap:8px;margin-bottom:18px">';
+  [{k:"upcoming",l:"Upcoming"},{k:"past",l:"Past"},{k:"all",l:"All"}].forEach(function(x){
+    var cnt=sets[x.k].length;
+    html+='<button class="btn '+(resFilter===x.k?"btn-acc":"btn-ghost")+' btn-sm" onclick="renderReservations(''+x.k+'')">'+x.l+' ('+cnt+')</button>';
+  });
+  html+='</div><div class="card"><table><thead><tr><th>Guest</th><th>Check-in</th><th>Check-out</th><th>Nights</th><th>Channel</th><th>Revenue</th><th>ADR</th></tr></thead><tbody>';
+  var list=resFilter==="past"?filtered.slice().reverse():filtered;
+  list.forEach(function(r){
+    var rev=r.financials&&r.financials.host&&r.financials.host.revenue?r.financials.host.revenue.amount/100:null;
+    var adr=rev&&r.nights?Math.round(rev/r.nights):null;
+    html+='<tr><td style="font-weight:500">'+r.guest.name+'<br><span style="font-size:11px;color:var(--mut)">'+r.guest.email+'</span></td><td style="font-size:12px">'+fdate(r.arrival_date)+'</td><td style="font-size:12px">'+fdate(r.departure_date)+'</td><td><span class="badge b-mut">'+r.nights+'n</span></td><td><span class="plat"><span class="pdot '+pcls(r.platform)+'"></span>'+r.platform+'</span></td><td style="font-weight:600;color:var(--grn)">'+(rev?money(rev):'<span style="color:var(--mut)">--</span>')+'</td><td style="color:var(--mut)">'+(adr?money(adr):"--")+'</td></tr>';
+  });
+  html+='</tbody></table></div>';
+  g("content").innerHTML=html;
+}
+
+function renderCalendar(){
+  var mo=DATA.calMo,yr=DATA.calYr;
+  var fd=new Date(yr,mo,1).getDay(),dim=new Date(yr,mo+1,0).getDate(),today=new Date();
+  var booked=new Set();
+  DATA.res.forEach(function(r){
+    if(!r.arrival_date)return;
+    var d=new Date(r.arrival_date+"T12:00:00Z"),end=new Date(r.departure_date+"T12:00:00Z");
+    while(d<end){booked.add(d.toISOString().split("T")[0]);d.setUTCDate(d.getUTCDate()+1);}
+  });
+  var bookedN=0;for(var d=1;d<=dim;d++){var ds=yr+"-"+String(mo+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");if(booked.has(ds))bookedN++;}
+  var occ=Math.round(bookedN/dim*100);
+  var html='<div class="g3" style="margin-bottom:20px">';
+  [[occ+"%","Occupancy","var(--acc)"],[bookedN+" days","Booked","var(--grn)"],[(dim-bookedN)+" days","Available","var(--mut)"]].forEach(function(s){
+    html+='<div class="stat-card"><div class="stat-shine" style="background:'+s[2]+'"></div><div class="stat-lbl">'+s[1]+'</div><div class="stat-val" style="color:'+s[2]+'">'+s[0]+'</div></div>';
+  });
+  html+='</div><div class="card"><div class="card-head"><div class="card-title">'+MF[mo]+" "+yr+'</div><div style="display:flex;gap:8px"><button class="btn btn-ghost btn-sm" onclick="calNav(-1)">Prev</button><button class="btn btn-ghost btn-sm" onclick="calNav(1)">Next</button></div></div><div class="card-body">';
+  html+='<div class="cal-grid">';
+  DAYS.forEach(function(d){html+='<div class="cal-hdr">'+d+'</div>';});
+  for(var i=0;i<fd;i++)html+='<div></div>';
+  for(var d=1;d<=dim;d++){
+    var ds=yr+"-"+String(mo+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+    var isT=today.getDate()===d&&today.getMonth()===mo&&today.getFullYear()===yr;
+    var res2=DATA.res.find(function(r){return r.arrival_date===ds;});
+    html+='<div class="cal-cell '+(booked.has(ds)?"c-bk":"c-av")+(isT?" c-td":"")+'" title="'+(res2?res2.guest.name:ds)+'">'+d+'</div>';
+  }
+  html+='</div></div></div>';
+  g("content").innerHTML=html;
+}
+function calNav(dir){var mo=DATA.calMo+dir,yr=DATA.calYr;if(mo>11){mo=0;yr++;}else if(mo<0){mo=11;yr--;}DATA.calMo=mo;DATA.calYr=yr;renderCalendar();}
+
+function renderRevenue(){
+  var monthly=getMonthly();
+  var resByYr={};
+  DATA.res.forEach(function(r){if(!r.arrival_date)return;var yr=r.arrival_date.slice(0,4);if(!resByYr[yr])resByYr[yr]=[];resByYr[yr].push(r);});
+  var html='<div class="stat-grid">';
+  Object.keys(resByYr).sort().slice(-4).forEach(function(yr){
+    var rev=calcRev(resByYr[yr]);var n=resByYr[yr].reduce(function(s,r){return s+(r.nights||0);},0);
+    html+='<div class="stat-card"><div class="stat-shine" style="background:var(--acc)"></div><div class="stat-lbl">'+yr+'</div><div class="stat-val" style="color:var(--acc);font-size:28px">'+money(rev)+'</div><div class="stat-delta">'+resByYr[yr].length+' bookings</div></div>';
+  });
+  html+='</div><div class="card"><table><thead><tr><th>Month</th><th>Revenue</th><th>Bookings</th><th>Nights</th><th>ADR</th><th>Occupancy</th></tr></thead><tbody>';
+  monthly.slice().reverse().forEach(function(m){
+    var adr=m.nights>0?Math.round(m.rev/m.nights):0;
+    var daysInMo=new Date(parseInt(m.month.slice(0,4)),parseInt(m.month.slice(5,7)),0).getDate();
+    var occ=Math.round(m.nights/daysInMo*100);
+    html+='<tr><td style="font-weight:500">'+m.month+'</td><td style="color:var(--grn);font-weight:600">'+(m.rev>0?money(m.rev):'<span style="color:var(--mut)">--</span>')+'</td><td><span class="badge b-mut">'+m.bookings+'</span></td><td>'+m.nights+'n</td><td style="color:var(--mut)">'+(adr>0?money(adr):"--")+'</td><td><div style="display:flex;align-items:center;gap:6px"><div style="width:50px;height:4px;background:var(--bdr);border-radius:2px"><div style="height:100%;width:'+occ+'%;background:var(--acc);border-radius:2px"></div></div><span style="font-size:11px;color:var(--mut)">'+occ+'%</span></div></td></tr>';
+  });
+  html+='</tbody></table></div>';
+  g("content").innerHTML=html;
+}
+
+function renderOwner(){
+  var now=new Date(),yr=now.getFullYear();
+  var yrRes=DATA.res.filter(function(r){return r.arrival_date&&r.arrival_date.startsWith(yr);});
+  var yrRev=calcRev(yrRes);
+  var bookedDays=getOcc(yr);
+  var daysSoFar=Math.floor((now-new Date(yr,0,1))/86400000)+1;
+  var occPct=Math.round(bookedDays/daysSoFar*100);
+  var allRev=calcRev(DATA.res);
+  var totalN=DATA.res.reduce(function(s,r){return s+(r.nights||0);},0);
+  var adr=totalN>0?Math.round(allRev/totalN):0;
+  var monthly=getMonthly().filter(function(m){return m.month.startsWith(yr);});
+  var prop=DATA.props[0]||{};
+  var maxRev=Math.max.apply(null,monthly.map(function(m){return m.rev;})||[1]);
+
+  var html='<div style="background:var(--surf);border:1px solid var(--bdr);border-radius:14px;overflow:hidden;margin-bottom:20px">';
+  html+='<div style="background:linear-gradient(135deg,#0A1628,#0D1F3C);padding:32px;border-bottom:1px solid var(--bdr)">';
+  html+='<div style="font-size:10px;color:var(--mut);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Performance Report - '+yr+'</div>';
+  html+='<div style="font-family:Cormorant Garamond,serif;font-size:28px;font-weight:700;margin-bottom:4px">'+(prop.name||"Your Property")+'</div>';
+  html+='<div style="font-size:13px;color:var(--mut)">'+(prop.address?prop.address.city+", "+prop.address.state:"Big Sky, MT")+'</div></div>';
+  html+='<div class="kpi-row"><div class="kpi-item"><div class="kpi-val">'+money(yrRev)+'</div><div class="kpi-lbl">'+yr+' Revenue</div></div><div class="kpi-item"><div class="kpi-val">'+occPct+'%</div><div class="kpi-lbl">Occupancy Rate</div></div><div class="kpi-item"><div class="kpi-val">'+money(adr)+'</div><div class="kpi-lbl">Avg Nightly Rate</div></div></div>';
+  if(monthly.length){
+    html+='<div style="padding:22px"><div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mut);margin-bottom:14px">Monthly Performance</div><div class="month-grid">';
+    monthly.forEach(function(m){
+      var pct=maxRev>0?Math.round(m.rev/maxRev*100):0;
+      var dIM=new Date(parseInt(m.month.slice(0,4)),parseInt(m.month.slice(5,7)),0).getDate();
+      var occ=Math.round(m.nights/dIM*100);
+      html+='<div class="month-cell"><div class="month-name">'+m.month.slice(5,7)+"/"+m.month.slice(2,4)+'</div><div class="month-rev" style="color:'+(m.rev>0?"var(--grn)":"var(--mut)")+'">'+(m.rev>0?money(m.rev):"--")+'</div><div class="month-occ">'+occ+'% occ</div><div class="month-bar"><div class="month-bar-fill" style="width:'+pct+'%"></div></div></div>';
+    });
+    html+='</div></div>';
+  }
+  html+='<div style="padding:22px;border-top:1px solid var(--bdr)"><table><thead><tr><th>Guest</th><th>Dates</th><th>Nights</th><th>Revenue</th></tr></thead><tbody>';
+  DATA.res.filter(function(r){return r.arrival_date<now.toISOString().split("T")[0];}).slice(-10).reverse().forEach(function(r){
+    var rev=r.financials&&r.financials.host&&r.financials.host.revenue?r.financials.host.revenue.amount/100:null;
+    html+='<tr><td style="font-weight:500">'+r.guest.name+'</td><td style="font-size:12px;color:var(--mut)">'+fdate(r.arrival_date)+' to '+fdate(r.departure_date)+'</td><td><span class="badge b-mut">'+r.nights+'n</span></td><td style="color:var(--grn);font-weight:600">'+(rev?money(rev):"--")+'</td></tr>';
+  });
+  html+='</tbody></table>';
+  html+='<div style="margin-top:20px;padding:16px;background:var(--surf2);border-radius:10px;border:1px solid var(--bdr)"><div style="font-size:11px;color:var(--mut);margin-bottom:4px">Managed by</div><div style="font-size:14px;font-weight:600">RentalRev Property Management</div><div style="font-size:12px;color:var(--mut);margin-top:2px">AI-powered revenue optimization - Dynamic pricing - Full-service management</div></div>';
+  html+='</div></div>';
+  g("content").innerHTML=html;
+}
+
+function renderInsights(){
+  var allRev=calcRev(DATA.res);
+  var pc={};DATA.res.forEach(function(r){var p=r.platform||"direct";pc[p]=(pc[p]||0)+1;});
+  var total=DATA.res.length;
+  var directPct=Math.round((pc.direct||0)/total*100);
+  var insights=[
+    {t:"Direct Booking Opportunity",b:"Only "+directPct+"% of your bookings are direct. Each Airbnb booking costs 14-16% in host fees. Enabling direct bookings could save "+money(allRev*0.12)+"+ annually at your current volume.",i:"Potential: "+money(allRev*0.12)+"/year",c:"var(--acc)"},
+    {t:"Peak Season Pricing",b:"Your Big Sky location has strong ski and summer demand. Raise rates 20-30% during Christmas, New Years, Presidents Weekend, and July 4th windows specifically.",i:"Est uplift: "+money(allRev*0.10)+" with targeted peak pricing",c:"var(--gold)"},
+    {t:"Minimum Stay Rules",b:"3-night minimums on weekends reduce turnover cost (cleaning, supplies, time) while maintaining occupancy. 5-7 night minimums during peak holidays maximize revenue per booking.",i:"Saves $200-400/month in turnover costs",c:"var(--grn)"},
+    {t:"Early Bird & Last Minute",b:"10-15% early bird discounts for 60+ day advance bookings fill your calendar early. Pair with 15-20% last-minute discounts within 7 days to eliminate gaps.",i:"8-12% occupancy increase = "+money(allRev*0.10)+"+",c:"var(--pur)"},
+    {t:"Owner Report as a Sales Tool",b:"The Owner Report tab shows prospective owners exactly what they could earn with professional management. Monthly revenue, occupancy rates, and ADR are more convincing than any sales pitch.",i:"Each new property adds significant MRR to your business",c:"var(--orange)"}
+  ];
+  var html='<div class="alert a-blu" style="margin-bottom:20px"><span>&#10022;</span><div>Analysis based on your <strong>'+total+' real bookings</strong> from Hospitable.</div></div>';
+  insights.forEach(function(ins){
+    html+='<div class="insight-card" style="border-left-color:'+ins.c+'"><div class="insight-title">'+ins.t+'</div><div class="insight-body">'+ins.b+'</div><div class="insight-impact">+ '+ins.i+'</div></div>';
+  });
+  g("content").innerHTML=html;
+}
+
+var dbS={name:"",rate:299,headline:"Book Direct & Save",subline:"Same property. No platform fees.",email:"",phone:"",minNights:2};
+var dbTab="settings";
+function renderDirect(t){
+  if(t)dbTab=t;
+  if(!dbS.name&&DATA.props.length)dbS.name=DATA.props[0].name||"My Rental";
+  var est=Math.round(dbS.rate*1.15),sv=est-dbS.rate,sp=Math.round(sv/est*100);
+  var html='<div style="display:flex;gap:8px;margin-bottom:20px">';
+  [["settings","Settings"],["preview","Preview"],["embed","Embed"]].forEach(function(x){html+='<button class="btn '+(dbTab===x[0]?"btn-acc":"btn-ghost")+' btn-sm" onclick="renderDirect(''+x[0]+'')">'+x[1]+'</button>';});
+  html+='</div>';
+  if(dbTab==="settings"){
+    html+='<div class="g2"><div class="card"><div class="card-head"><div class="card-title">Page Settings</div></div><div class="card-body">';
+    html+='<div style="margin-bottom:12px"><label class="lbl">Property Name</label><input class="inp" value="'+dbS.name+'" onchange="dbS.name=this.value"/></div>';
+    html+='<div style="margin-bottom:12px"><label class="lbl">Headline</label><input class="inp" value="'+dbS.headline+'" onchange="dbS.headline=this.value"/></div>';
+    html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px"><div><label class="lbl">Direct Rate/Night</label><input class="inp" type="number" value="'+dbS.rate+'" onchange="dbS.rate=+this.value"/></div><div><label class="lbl">Min Nights</label><input class="inp" type="number" value="'+dbS.minNights+'" onchange="dbS.minNights=+this.value"/></div></div>';
+    html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><label class="lbl">Email</label><input class="inp" type="email" value="'+dbS.email+'" onchange="dbS.email=this.value"/></div><div><label class="lbl">Phone</label><input class="inp" value="'+dbS.phone+'" onchange="dbS.phone=this.value"/></div></div>';
+    html+='</div></div><div class="card"><div class="card-head"><div class="card-title">Value Prop</div></div><div class="card-body">';
+    html+='<div class="alert a-grn"><span>$</span><div>Guests save <strong>$'+sv+'/night ('+sp+'%)</strong> vs Airbnb. You keep that — est <strong>'+money(sv*DATA.res.length)+'</strong> extra if all bookings were direct.</div></div>';
+    html+='</div></div></div>';
+  } else if(dbTab==="preview"){
+    html+='<div style="max-width:460px;margin:0 auto;background:#FFFDF8;border-radius:14px;overflow:hidden;border:2px solid var(--bdr);color:#1A1410">';
+    html+='<div style="background:linear-gradient(135deg,#0A1628,#1A2E40);padding:28px;color:white;text-align:center"><div style="font-family:Cormorant Garamond,serif;font-size:28px;font-weight:700;margin-bottom:4px">'+dbS.headline+'</div><div style="font-size:13px;opacity:.7">'+dbS.subline+'</div></div>';
+    html+='<div style="padding:24px"><div style="background:#E8F5E9;color:#2E7D32;padding:8px 12px;border-radius:8px;font-size:13px;margin-bottom:14px;font-weight:500">Save $'+sv+'/night vs Airbnb!</div>';
+    html+='<label style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#888;margin-bottom:4px;display:block">Check-in</label><input style="width:100%;padding:10px;border:1.5px solid #DDD;border-radius:7px;font-size:13px;margin-bottom:10px" type="date"/>';
+    html+='<label style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#888;margin-bottom:4px;display:block">Check-out</label><input style="width:100%;padding:10px;border:1.5px solid #DDD;border-radius:7px;font-size:13px;margin-bottom:10px" type="date"/>';
+    html+='<label style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#888;margin-bottom:4px;display:block">Name</label><input style="width:100%;padding:10px;border:1.5px solid #DDD;border-radius:7px;font-size:13px;margin-bottom:10px" placeholder="Full name"/>';
+    html+='<label style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#888;margin-bottom:4px;display:block">Email</label><input style="width:100%;padding:10px;border:1.5px solid #DDD;border-radius:7px;font-size:13px;margin-bottom:14px" type="email" placeholder="your@email.com"/>';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div><div style="font-size:11px;color:#999;text-decoration:line-through">$'+est+'/night on Airbnb</div><div style="font-family:Cormorant Garamond,serif;font-size:28px;font-weight:700">$'+dbS.rate+'<span style="font-size:13px;font-weight:400">/night</span></div></div><div style="font-size:11px;color:#2E7D32;background:#E8F5E9;padding:3px 10px;border-radius:10px;font-weight:600">Min '+dbS.minNights+' nights</div></div>';
+    html+='<button style="width:100%;padding:14px;background:#0A1628;color:white;border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer">Request to Book Direct</button>';
+    if(dbS.email)html+='<div style="text-align:center;font-size:11px;color:#999;margin-top:10px">'+dbS.email+(dbS.phone?" - "+dbS.phone:"")+'</div>';
+    html+='</div></div>';
+  } else {
+    html+='<div class="card"><div class="card-head"><div class="card-title">Embed Code</div></div><div class="card-body"><div class="alert a-blu"><span>i</span><div>Paste into any website. Guests book directly - zero OTA fees.</div></div><button class="btn btn-acc" onclick="copyEmbed()">Copy Embed Code</button></div></div>';
+  }
+  g("content").innerHTML=html;
+}
+function copyEmbed(){
+  var sv=Math.round(dbS.rate*0.15);
+  var c='<form action="mailto:'+dbS.email+'" method="post" style="max-width:460px;font-family:sans-serif;padding:24px;border:1px solid #ddd;border-radius:12px"><h2>Book '+dbS.name+' Direct - Save $'+sv+'/night</h2><input type="date" name="checkin" required style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;margin-bottom:10px;font-size:14px"/><input type="date" name="checkout" required style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;margin-bottom:10px;font-size:14px"/><input type="text" name="name" placeholder="Full name" required style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;margin-bottom:10px;font-size:14px"/><input type="email" name="email" placeholder="Email" required style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;margin-bottom:16px;font-size:14px"/><button type="submit" style="width:100%;padding:14px;background:#0A1628;color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">Book Direct @ $'+dbS.rate+'/night</button></form>';
+  navigator.clipboard&&navigator.clipboard.writeText(c).then(function(){alert("Copied!");});
+}
+
+loadAll();
+</script>
+</body>
+</html>
