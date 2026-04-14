@@ -160,7 +160,7 @@ function doConnect(){
 function disconnect(){STATE={properties:[],reservations:[],calData:[],selProp:null,calMonth:new Date().getMonth(),calYear:new Date().getFullYear()};g("app").style.display="none";g("connect-screen").style.display="block";}
 function loadData(){
   setStatus("loading");
-  return Promise.all([api("/v2/properties?per_page=50"),api("/v2/reservations?per_page=100&include=guest,financials,properties")])
+  return Promise.all([api("/v2/properties?per_page=50"),api("/v2/reservations?per_page=100&include=guest,financials,properties&properties[]=" + (STATE.properties[0]?.id || ""))])
   .then(function(results){
     STATE.properties=results[0].data||[];STATE.reservations=results[1].data||[];
     if(STATE.properties.length&&!STATE.selProp)STATE.selProp=STATE.properties[0];
